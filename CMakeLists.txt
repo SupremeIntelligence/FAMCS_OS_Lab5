@@ -1,21 +1,21 @@
-﻿# CMakeList.txt: проект CMake для OS_Lab5; включите исходный код и определения,
-# укажите здесь логику для конкретного проекта.
-#
-cmake_minimum_required (VERSION 3.8)
+﻿cmake_minimum_required(VERSION 3.10)
 
-# Включение горячей перезагрузки для компиляторов MSVC, если поддерживается.
-if (POLICY CMP0141)
-  cmake_policy(SET CMP0141 NEW)
-  set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
+# Название проекта
+project(FileAccessSystem)
+
+# Установка стандарта C++
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+
+# Для Windows добавляем библиотеку kernel32
+if(WIN32)
+    set(EXTRA_LIBS kernel32)
 endif()
 
-project ("OS_Lab5")
+# Добавление серверной части
+add_executable(server server.cpp)
+target_link_libraries(server PRIVATE ${EXTRA_LIBS})
 
-# Добавьте источник в исполняемый файл этого проекта.
-add_executable (OS_Lab5 "main.cpp")
-
-if (CMAKE_VERSION VERSION_GREATER 3.12)
-  set_property(TARGET OS_Lab5 PROPERTY CXX_STANDARD 20)
-endif()
-
-# TODO: Добавьте тесты и целевые объекты, если это необходимо.
+# Добавление клиентской части
+add_executable(client client.cpp)
+target_link_libraries(client PRIVATE ${EXTRA_LIBS})
